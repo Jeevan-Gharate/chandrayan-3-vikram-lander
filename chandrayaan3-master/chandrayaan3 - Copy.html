@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<!-- Copyright (c) 2013-2023 Sankaranarayanan Viswanathan. All rights reserved. -->
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        
+        <meta name="description" content="Chandrayaan 3 Orbit Animation by Sankar Viswanathan">
+        <meta name="author" content="Sankaranarayanan Viswanathan">
+        <meta name="keywords" content="chandrayaan, chandrayaan3, moon, isro, india, space, astronomy, animation">
+
+        <!-- Facebook Meta Tags -->
+        <meta property="og:url" content="https://sankara.net/chandrayaan3.html">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Chandrayaan 3 Orbit Animation">
+        <meta property="og:description" content="Chandrayaan 3 Orbit Animation in 3D by Sankar Viswanathan">
+        <meta property="og:image" content="https://sankara.net/w3images/chandrayaan3-screenshot.png">
+
+        <!-- Twitter Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta property="twitter:domain" content="sankara.net">
+        <meta property="twitter:url" content="https://sankara.net/chandrayaan3.html">
+        <meta name="twitter:title" content="Chandrayaan 3 Orbit Animation">
+        <meta name="twitter:description" content="Chandrayaan 3 Orbit Animation in 3D by Sankar Viswanathan">
+        <meta name="twitter:image" content="https://sankara.net/w3images/chandrayaan3-screenshot.png">
+
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+
+        <script type="importmap">
+        {
+            "imports": {
+            "three": "https://unpkg.com/three@0.155.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.155.0/examples/jsm/",
+            "swiper": "https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.mjs"
+            }
+        }
+        </script>
+
+        <script src="third-party/d3.v3.min.js"></script>
+        <script src="third-party/jquery-1.9.1.js"></script>
+        <script src="third-party/jquery-ui-1.10.3.custom.min.js"></script>
+        <script src="third-party/jquery.dialogextend.min.js"></script>
+        <script src="third-party/threex.atmospherematerial.js"></script>
+        <script src="third-party/ephemeris-0.1.0.min.js"></script>
+
+        <script type="module" src="astro.js"></script>
+        <script type="module" src="cy3.js"></script>
+        <script src="ga.js"></script> 
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/ui-darkness/jquery-ui-1.10.3.custom.min.css">
+        <link rel="stylesheet" type="text/css" href="cy3.css">
+
+        <title>ISRO's Chandrayaan 3 Mission 2023 - An Orbit Animation</title>
+    </head>
+
+    <body>
+
+        <div id="wrapper" class="wrapper flex-container">
+
+        <div id="header" class="header">
+            <div class="navbar flex-container">
+
+                <button id="settings-panel-button">☰ Settings</button>
+                
+                <div id="blurb" class="blurb">
+                    <h1><a href="https://www.isro.gov.in/Chandrayaan3_New.html">Chandrayaan 3</a> Orbit Animation.</h1>
+                
+                </div>
+    
+            </div>
+    
+            <div id="settings-panel" class="settings-panel"> <!-- First row buttons -->
+    
+                <div id="settings-panel-fieldset" class="flex-container">
+                    <!-- <legend>Settings</legend> -->
+                    <fieldset autocomplete="off">
+                        <legend class="config-label config-first-label">Origin/Phase:</legend>
+                        <input id="origin-earth" type="radio" name="mode" value="geo">
+                        <label for="origin-earth">Earth</label>
+                        <input id="origin-moon" type="radio" name="mode" value="lunar" checked="checked">
+                        <label for="origin-moon">Moon</label>
+                        <!-- <input type="radio" name="mode" value="lro"   onclick="toggleMode()">Moon/Post Vikram LOS</input> -->
+                    </fieldset>
+    
+                    <fieldset autocomplete="off">
+                        <legend class="config-label">Camera:</legend>
+                        <input type="radio" name="camera" value="default" id="camera-default" checked="checked">
+                        <label for="camera-default">Default</label>
+                        <input type ="radio" name="camera" value="moon" id="camera-moon">
+                        <label for="camera-moon">Moon</label>
+                    </fieldset>
+    
+                    <fieldset autocomplete="off">
+                        <legend class="config-label">Lock On:</legend>
+                        <input type="checkbox" id="checkbox-lock-cy3">
+                        <label for="checkbox-lock-cy3">Chandrayaan 3</label>
+                        <span class="geo"><input type="checkbox" id="checkbox-lock-moon"></span>
+                        <label class="geo" for="checkbox-lock-moon">Moon</label>
+                        <span class="lunar lro"><input type="checkbox" id="checkbox-lock-earth"></span>
+                        <label class="lunar lro" for="checkbox-lock-earth">Earth</label>
+                    </fieldset>
+    
+                    <fieldset autocomplete="off">
+                        <legend class="config-label">Plane</legend>
+                        <input type="radio" name="plane" value="XY" id="checkbox-lock-xy" checked="checked">
+                        <label for="checkbox-lock-xy">XY</label>
+                        <input type="radio" name="plane" value="YZ" id="checkbox-lock-xz">
+                        <label for="checkbox-lock-xy">YZ</label>
+                        <input type="radio" name="plane" value="ZX" id="checkbox-lock-yz">
+                        <label for="checkbox-lock-xy">ZX</label>
+                    </fieldset>
+                
+                    <fieldset autocomplete="off" class="dimension-3D">
+                        <legend class="config-label">View</legend>
+                        <input id="landing" type="checkbox">
+                        <label for="landing">Landing!</label>
+                        <input id="joyride" type="checkbox">
+                        <label for="joyride">Joy Ride!</label>
+                        <input type="checkbox" name="view" value="orbit" id="view-orbit" checked="checked">
+                        <label for="view-orbit">CY3 Orbit</label>
+                        <input type="checkbox" name="view" value="orbit-descent" id="view-orbit-descent" checked="checked">
+                        <label for="view-orbit-descent">CY3 Descent Orbit</label>
+                        <!-- <input type="checkbox" name="view" value="orbit-vikram" id="view-orbit-vikram"  onclick="setView()" checked="checked">Vikram Orbit</input> -->
+                        <!-- <input type="checkbox" name="view" value="orbit-lro"    id="view-orbit-lro"     onclick="setView()" checked="checked">LRO Orbit</input> -->
+                        <input type="checkbox" name="view" value="craters" id="view-craters" checked="checked">
+                        <label for="view-craters">Locations</label>
+                        <input type="checkbox" name="view" value="xyz" id="view-xyz-axes" checked="checked">
+                        <label for="view-xyz-axes">XYZ Axes</label>
+                        <input type="checkbox" name="view" value="poles" id="view-poles" checked="checked">
+                        <label for="view-poles">Poles</label>
+                        <input type="checkbox" name="view" value="polar-axes" id="view-polar-axes" checked="checked">
+                        <label for="view-polar-axes">Polar Axes</label>
+                        <input type="checkbox" name="view" value="sky" id="view-sky" checked="checked">
+                        <label for="view-sky">Stellar Sky</label>
+
+                                            <!--
+                        <span class="config-label">Camera Placed At:</span>
+                        <input type="radio" name="camera" value="AUTO"  id="camerapos-auto" onclick="toggleCameraPos()" checked="checked">Auto</input>
+                        <input type="radio" name="camera" value="CY3"   id="camerapos-cy3"   onclick="toggleCameraPos()">CY3</input>
+                        <input type="radio" name="camera" value="EARTH" id="camerapos-earth" onclick="toggleCameraPos()">Earth</input>
+                        <input type="radio" name="camera" value="MOON"  id="camerapos-moon"  onclick="toggleCameraPos()">Moon</input>
+    
+                        <span class="hspace">|</span>
+    
+                        <span class="config-label">Camera Looking At:</span>
+                        <input type="radio" name="look" value="AUTO"  id="cameralook-auto" onclick="toggleCameraLook()" checked="checked">Auto</input>
+                        <input type="radio" name="look" value="CY3"   id="cameralook-cy3"   onclick="toggleCameraLook()">CY3</input>
+                        <input type="radio" name="look" value="EARTH" id="cameralook-earth" onclick="toggleCameraLook()">Earth</input>
+                        <input type="radio" name="look" value="MOON"  id="cameralook-moon"  onclick="toggleCameraLook()">Moon</input>
+                        -->
+                    </fieldset>
+    
+                    <fieldset autocomplete="off">
+                        <legend class="config-label">Dimension:</legend>
+                        <input type ="radio" name="dimension" value="2D" id="dimension-2D">
+                        <label for="dimension-2D">2D</label>
+                        <input type ="radio" name="dimension" value="3D" id="dimension-3D" checked="checked">
+                        <label for="dimension-3D">3D</label>
+                    </fieldset>
+    
+                </div>
+            </div> <!-- settings panel -->
+    
+            <div id="control-panel" class="control-panel">
+    
+    
+                <div id="animation-control-panel">
+                    <div class="vspace"></div>
+    
+                    <div id="animationbuttons" class="swiper swiper1">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide"><button id="animate"    type="button" class="button">Play</button></div>
+                            <div class="swiper-slide"><button id="slower"     type="button" class="button">Slower</button></div>
+                            <div class="swiper-slide"><button id="resetspeed" type="button" class="button">Reset</button></div>
+                            <div class="swiper-slide"><button id="faster"     type="button" class="button">Faster</button></div>
+                            <div class="swiper-slide"><button id="realtime"   type="button" class="button">Realtime</button></div>
+                            <!-- <div class="swiper-slide"><span id="animspeed"></span></div> -->
+            
+                            <div class="swiper-slide"><span class="hspace">|</span></div>
+
+                            <div class="swiper-slide"><button id="landingbutton" type="button" class="button" title="Landing!">✈ Landing!</button></div>
+                            <div class="swiper-slide"><button id="joyridebutton" type="button" class="button" title="🎢 Joy Ride!">🎢 Joy Ride!</button></div>
+            
+                            <div class="swiper-slide"><span class="hspace">|</span></div>
+
+                            <div class="swiper-slide"><button id="fastbackward"       type="button" class="button" title="Fast rewind">&lt;&lt;</button></div> <!-- &#x25C1; --> 
+                            <div class="swiper-slide"><button id="backward"           type="button" class="button" title="Rewind">&lt;</button></div> <!-- &#x25C3; --> 
+                            <div class="swiper-slide"><button id="forward"            type="button" class="button" title="Forward">&gt;</button></div> <!-- &#x25B9; -->  
+                            <div class="swiper-slide"><button id="fastforward"        type="button" class="button" title="Fast forward">&gt;&gt;</button></div> <!-- &#x25B7; -->             
+                        </div>
+                    </div>
+                    <div class="vspace"></div>
+                    
+                    <!-- <span class="config-label config-first-label">Timeline:</span> -->
+    
+                    <!-- <span id="burnbuttons"></span>     -->
+
+                    <div class="swiper swiper2">
+                        <div id="burnbuttons" class="swiper-wrapper">
+                            <!-- burn buttons will get added here dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="vspace"></div>
+    
+                    <div id="eventinfo" class="eventinfo"></div>
+    
+                </div> <!-- First row buttons -->
+        
+            </div> <!-- control panel -->
+        </div>        
+
+        <div id="content-wrapper" class="content-wrapper flex-container">
+        
+        <div id="svg-top-baseline"></div>
+
+        <div id="banner" class="banner" title="Some quick info before you start...">
+        </div>
+
+        <div id="progressbar" class="progressbar">
+            <div id="progressbar-label" class="progressbar-label"></div>
+        </div>
+
+        <div id="zoom-panel" class="zoom-panel dimension-2D desktoponly">
+            <table class="desktoponly">
+            <tr>
+                <td></td>
+                <td><button id="panup"      type="button" class="navbutton">&#x25B2;</button></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><button id="panleft"    type="button" class="navbutton" title="Pan left">&#x25C0;</button></td>
+                <td><button id="reset"      type="button" class="navbutton" title="Reset zoom/pan settings">&#x25C8;</button></td>
+                <td><button id="panright"   type="button" class="navbutton" title="Pan right">&#x25B6;</button></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button id="pandown"    type="button" class="navbutton" title="Pan down">&#x25BC;</button></td>
+                <td></td>
+            </tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr>
+                <td></td>
+                <td><button id="zoomin"     type="button" class="navbutton" title="Zoom in"><b>+</b></button></td>
+                <td></td>                     
+            </tr>
+            <tr>
+                <td></td>
+                <td><button id="zoomout"    type="button" class="navbutton" title="Zoom out"><b>-</b></button></td>
+                <td></td>                    
+            </tr>
+            </table>
+        </div> <!-- zoom panel -->
+
+        <div id="svg-wrapper" class="svg-wrapper dimension-2D">
+        </div>
+        <div id="canvas-wrapper" class="canvas-wrapper dimension-3D">
+        </div>
+
+        </div> <!-- content-wrapper -->
+
+        <div id="footer-wrapper" class="footer-wrapper">
+
+            <div id="stats" class="stats prevent-select">
+
+                <div style="display: none"> <!-- extended statistics / Relative to Earth -->
+                    <table>
+                    <tr>
+                        <th colspan="2"><b>Relative to Earth</b></th>
+                    </tr>
+                    <!-- <tr>
+                        <td>Vehicle</td>
+                        <td><label class="cy3">Chandrayaan 3</label></td>
+                    </tr> -->
+                    <tr>
+                        <td>Distance (km): </td>
+                        <td><label id="distance-CY3-EARTH" class="cy3"></label></td>
+                    </tr>
+                    <tr>
+                        <td>Altitude (km): </td>
+                        <td><label id="altitude-CY3-EARTH" class="cy3"></label></td>
+                    </tr>
+                    <tr>
+                        <td>Velocity (km/s): </td>
+                        <td><label id="velocity-CY3-EARTH" class="cy3"></label></td>
+                    </tr>
+                    </table>
+                </div>
+
+                <div class="vspace"></div>
+
+                <div> <!-- extended statistics / Relative to Moon -->
+                    <table>
+                    <tr>
+                        <th colspan="2"><b>Relative to Moon</b></th>
+                    </tr>
+                    <!-- <tr>
+                        <td>Vehicle</td>
+                        <td><label class="cy3">Chandrayaan 3</label></td>
+                    </tr> -->
+                    <tr>
+                        <td>Distance (km): </td>
+                        <td><label id="distance-CY3-MOON" class="cy3"></label></td>
+                    </tr>
+                    <tr>
+                        <td>Altitude (km): </td>
+                        <td><label id="altitude-CY3-MOON" class="cy3"></label></td>
+                    </tr>
+                    <tr>
+                        <td>Velocity (km/s): </td>
+                        <td><label id="velocity-CY3-MOON" class="cy3"></label></td>
+                    </tr>
+                    </table>
+                </div>
+            </div> <!-- stats wrapper -->
+            
+            <button id="info-button" type="button" class="button">Info</button>
+    
+            <div id="date" class="date"></div>
+
+            <div class="info desktoponly">
+                <table>
+                <tr>
+                    <!-- <td>Orbit data epoch: JD = <label id="epochjd"></label> | UTC = <label id="epochdate"></label></td> -->
+                    <td>CY3 phase: 
+                    <label id="phase-1"></label> | 
+                    <label id="phase-2"></label> | 
+                    <label id="phase-3"></label>
+                    </td>
+                </tr>
+                </table>
+            </div> <!-- info -->
+ <!-- copyright -->
+        </div> <!-- footer-wrapper -->
+    </div> <!-- wrapper -->
+    </body>
+</html>
+
+<!-- end of file -->
